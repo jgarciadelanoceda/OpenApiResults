@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,7 +50,10 @@ app.Run();
 public class EnumController : ControllerBase
 {
 	[HttpGet]
-	public IResult Get(LogLevel? logLevel = LogLevel.Error) => Results.Ok(logLevel);
+	public Results<Ok<LogLevel?>, NotFound> Get(LogLevel? logLevel = LogLevel.Error) =>
+		logLevel == LogLevel.Error ?
+		TypedResults.Ok(logLevel) :
+		TypedResults.NotFound();
 }
 
 public record class Person(string FirstName, string LastName);
